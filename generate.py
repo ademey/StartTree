@@ -4,6 +4,7 @@ import yaml
 from os.path import expanduser
 from shutil import copyfile
 from bs4 import BeautifulSoup
+import os, random
 
 # get home directory
 home = expanduser("~")
@@ -23,6 +24,7 @@ def prettifyHTML(html):
 def parse_yaml():
     with open(config_path, mode='r') as file:
         file_dict = yaml.full_load(file)
+    print(file_dict)
     return file_dict
 
 def print_keys(dictionary):
@@ -73,13 +75,21 @@ def gen_html(file_dict):
 
     # open files
     skeleton_html = open(cache_dir + '/skeletons/index.html', 'r')
+    # skeleton_html = open('skeletons/index.html', 'r')
     cache_html = open(cache_dir + '/index.html', 'w+')
+    img_file = open(config_dir + '/banners/' + random.choice(os.listdir(config_dir + '/banners')), 'r')
+    # img_file = open(home + '/dotfiles/ascii/kabouter.ascii', 'r')
+    img = img_file.readlines()
+    
 
     # copy skeleton_html to cache_html until Column Start comment
     lines = skeleton_html.readlines()
     for line in lines:
-        if line == "<!-- Columns start -->\n":
+        if "<!-- Columns start -->" in line:
             gen_columns(cache_html, file_dict)
+        elif "<!-- Image -->" in line:
+            for imgline in img:
+                cache_html.write(imgline)
         else:
             cache_html.write(line)
 
@@ -93,6 +103,7 @@ def gen_html(file_dict):
 
     # close files
     skeleton_html.close()
+    img_file.close()
     cache_html.close()
 
     print("Done!")
@@ -121,7 +132,7 @@ def gen_style(file_dict):
 
     lines = skeleton_style.readlines()
     for line in lines:
-        if line == "/* font-size */\n":
+        if "/* font-size */" in line:
             cache_style.write("font-size: " + str(font_size) + "px;\n")
         else:
             cache_style.write(line)

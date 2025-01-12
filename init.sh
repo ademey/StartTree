@@ -19,7 +19,7 @@ fi
 # check if .local/bin exists
 if [ ! -d "$HOME/.local/bin" ]; then
   echo "The directory '~/.local/bin' does not exist, or you do not have permissions to edit it."
-  exit
+  # exit
 fi
 
 # check if .config/StartTree exists, create it and config if not
@@ -62,10 +62,10 @@ echo "Creating Hack.ttf..."
 cp "./skeletons/Hack.ttf" "$cache_dir/styles/Hack.ttf"
 
 # add to path
-FILEPATH=$(readlink -f "generate.py")
-ln -s $FILEPATH $HOME/.local/bin/starttree.py
+# FILEPATH=$(readlink -f "generate.py")
+# ln -s $FILEPATH $HOME/.local/bin/starttree.py
 echo "generate.py has been linked to $HOME/.local/bin/"
 echo "Make sure this directory is in your \$PATH"
 
-FILEPATH=$(readlink -f "docker/data/default.conf")
-ln -s $FILEPATH $HOME/.cache/StartTree/default.conf
+# FILEPATH=$(readlink -f "docker/data/default.conf")
+# ln -s $FILEPATH $HOME/.cache/StartTree/default.conf
