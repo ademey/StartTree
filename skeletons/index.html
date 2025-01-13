@@ -5,16 +5,25 @@
     <link rel="stylesheet" type="text/css" href="./styles/style.css" />
     <title>λ start</title>
     <script type="text/javascript">
-      console.log("Hello world", document.getElementsByClass("header"));
+      function pick(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+      }
+
+      function onLoad() {
+        console.log("page loaded");
+
+        var banners = document.querySelectorAll("header pre");
+        // console.log("images:", banners);
+        pick(banners).classList.add("active");
+      }
+      window.addEventListener("load", onLoad);
     </script>
   </head>
   <body>
     <div id="cont" class="container">
-      <div class="header">
-        <pre id="img" class="image">
-          <!-- Image -->
-        </pre>
-      </div>
+      <header>
+        <!-- Image -->
+      </header>
       <div class="prompt">~<span> λ</span> welcome</div>
       <div class="row">
         <!-- Columns start -->

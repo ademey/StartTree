@@ -1,7 +1,7 @@
 #!/bin/python3
 
 import yaml
-from os.path import expanduser, isdir, isfile
+from os.path import expanduser, isdir, isfile, join
 from shutil import copyfile
 from bs4 import BeautifulSoup
 import os, random
@@ -69,6 +69,30 @@ def gen_columns(html_file, file_dict):
             html_file.write("</div>\n")
             html_file.write("</div>\n")
 
+def write_banner(html_file, banner_path):
+    print("adding banner")
+    img_file = open(banner_path, 'r')
+    img = img_file.readlines()
+    html_file.write("<pre>")
+    for imgline in img:
+        html_file.write(imgline)
+    html_file.write("</pre>")
+    img_file.close()
+
+
+def gen_banners(html_file, file_dict):
+    print("Generating banners....")
+    if "banner" in file_dict:
+        print("use banner")
+        if isdir(file_dict["banner"]):
+            for file in os.listdir(file_dict["banner"]):
+                filename = os.fsdecode(file)
+                write_banner(html_file, join(file_dict["banner"], filename))
+            print("banner folder not supported")
+            files = os.listdir(file_dict["banner"])
+        else:
+            write_banner(html_file, file_dict["banner"])
+            
 
 def gen_html(file_dict):
     print("Generating index.html...")
@@ -86,16 +110,7 @@ def gen_html(file_dict):
         if "<!-- Columns start -->" in line:
             gen_columns(cache_html, file_dict)
         elif "<!-- Image -->" in line:
-            if "banner" in file_dict:
-                print("use banner")
-                if isdir(file_dict["banner"]):
-                    print("dir not supported")
-                else:
-                    img_file = open(file_dict["banner"], 'r')
-                    img = img_file.readlines()
-                    for imgline in img:
-                        cache_html.write(imgline)
-                    img_file.close()
+            gen_banners(cache_html, file_dict)
         else:
             cache_html.write(line)
 
