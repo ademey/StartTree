@@ -1,7 +1,7 @@
 #!/bin/python3
 
 import yaml
-from os.path import expanduser
+from os.path import expanduser, isdir, isfile
 from shutil import copyfile
 from bs4 import BeautifulSoup
 import os, random
@@ -77,9 +77,7 @@ def gen_html(file_dict):
     skeleton_html = open(cache_dir + '/skeletons/index.html', 'r')
     # skeleton_html = open('skeletons/index.html', 'r')
     cache_html = open(cache_dir + '/index.html', 'w+')
-    img_file = open(config_dir + '/banners/' + random.choice(os.listdir(config_dir + '/banners')), 'r')
-    # img_file = open(home + '/dotfiles/ascii/kabouter.ascii', 'r')
-    img = img_file.readlines()
+    # img_file = open(home + '/banners/' + random.choice(os.listdir(config_dir + '/banners')), 'r')
     
 
     # copy skeleton_html to cache_html until Column Start comment
@@ -88,8 +86,16 @@ def gen_html(file_dict):
         if "<!-- Columns start -->" in line:
             gen_columns(cache_html, file_dict)
         elif "<!-- Image -->" in line:
-            for imgline in img:
-                cache_html.write(imgline)
+            if "banner" in file_dict:
+                print("use banner")
+                if isdir(file_dict["banner"]):
+                    print("dir not supported")
+                else:
+                    img_file = open(file_dict["banner"], 'r')
+                    img = img_file.readlines()
+                    for imgline in img:
+                        cache_html.write(imgline)
+                    img_file.close()
         else:
             cache_html.write(line)
 
@@ -103,7 +109,6 @@ def gen_html(file_dict):
 
     # close files
     skeleton_html.close()
-    img_file.close()
     cache_html.close()
 
     print("Done!")
